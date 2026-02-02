@@ -103,7 +103,8 @@ struct CompileConfig {
   size_t cuda_stack_limit{0};
 
   // FlagOS backend options:
-  std::string flagos_chip{"generic"};  // Target chip: mlu370, ascend910, dcu, etc.
+  std::string flagos_chip{
+      "generic"};  // Target chip: mlu370, ascend910, dcu, etc.
 
   CompileConfig();
 

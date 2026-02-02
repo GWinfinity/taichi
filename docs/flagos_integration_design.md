@@ -93,18 +93,18 @@ bool arch_is_gpu(Arch arch) {
 class FlagosDevice : public LlvmDevice {
  public:
   // 内存管理
-  RhiResult allocate_memory(const AllocParams &params, 
+  RhiResult allocate_memory(const AllocParams &params,
                             DeviceAllocation *out_devalloc) override;
   void dealloc_memory(DeviceAllocation handle) override;
-  
+
   // FlagOS 运行时接口
   void *get_memory_addr(DeviceAllocation devalloc) override;
   std::size_t get_total_memory() override;
-  
+
   // 内核执行
   Stream *get_compute_stream() override;
   void wait_idle() override;
-  
+
  private:
   // FlagOS 上下文和驱动
   std::shared_ptr<FlagosContext> context_;
@@ -123,7 +123,7 @@ class FlagosDevice : public LlvmDevice {
 class TaskCodeGenFlagOS : public TaskCodeGenLLVM {
   void visit(OffloadedStmt *stmt) override;
   void create_offload_range_for(OffloadedStmt *stmt) override;
-  
+
   // SPMD 信息获取
   std::tuple<llvm::Value *, llvm::Value *> get_spmd_info() override;
 };
@@ -138,10 +138,10 @@ class FlagosProgramImpl : public LlvmProgramImpl {
  public:
   void materialize_runtime(KernelProfilerBase *profiler,
                           uint64 **result_buffer_ptr) override;
-  
+
   // FlagOS 特定初始化
   void initialize_flagos_backend();
-  
+
  private:
   std::unique_ptr<FlagosRuntime> flagos_runtime_;
 };
@@ -160,7 +160,7 @@ class FlagTreeCompiler {
   // 编译 LLVM IR 到目标芯片代码
   std::vector<uint8_t> compile(const std::string &llvm_ir,
                                const std::string &target_chip);
-  
+
   // 获取支持的芯片列表
   std::vector<std::string> get_supported_chips();
 };
@@ -170,13 +170,13 @@ class FlagosRuntime {
   // 内存分配
   void* allocate_memory(size_t size, bool managed);
   void free_memory(void* ptr);
-  
+
   // 内核启动
   void launch_kernel(const std::string &kernel_name,
                     void **args,
                     uint32_t grid_dim,
                     uint32_t block_dim);
-  
+
   // 同步
   void synchronize();
 };
@@ -198,7 +198,7 @@ ti.init(arch=ti.flagos)
 # export TI_FLAGOS_CHIP=mlu370
 # export TI_FLAGOS_CHIP=ascend910
 
-ti.init(arch=ti.flagos, 
+ti.init(arch=ti.flagos,
         flagos_chip="mlu370")  # 指定目标芯片
 ```
 
@@ -213,13 +213,13 @@ option(TI_WITH_FLAGOS "Build with FlagOS support" OFF)
 if(TI_WITH_FLAGOS)
   find_package(FlagOS REQUIRED)
   add_definitions(-DTI_WITH_FLAGOS)
-  
+
   # FlagOS RHI
   add_subdirectory(taichi/rhi/flagos)
-  
+
   # FlagOS Codegen
   add_subdirectory(taichi/codegen/flagos)
-  
+
   # FlagOS Runtime
   add_subdirectory(taichi/runtime/program_impls/flagos)
 endif()
@@ -280,7 +280,7 @@ flagos_tests:
       env:
         TI_FLAGOS_CHIP: mlu370
       run: python -m pytest tests/test_flagos_mlu.py
-    
+
     - name: Test Ascend Backend
       env:
         TI_FLAGOS_CHIP: ascend910

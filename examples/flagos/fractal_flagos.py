@@ -32,10 +32,10 @@ except AttributeError:
 if FLAGOS_AVAILABLE:
     # Method 1: Use environment variable
     # export TI_FLAGOS_CHIP=mlu370
-    
+
     # Method 2: Specify chip in init
     ti.init(arch=ti.flagos, flagos_chip="mlu370")
-    
+
     print(f"Using FlagOS backend with chip: {ti.cfg.flagos_chip}")
 else:
     ti.init(arch=ti.cpu)
@@ -48,7 +48,7 @@ pixels = ti.field(dtype=float, shape=(n * 2, n))
 @ti.func
 def complex_sqr(z):
     """Complex number square"""
-    return ti.Vector([z[0]**2 - z[1]**2, z[1] * z[0] * 2])
+    return ti.Vector([z[0] ** 2 - z[1] ** 2, z[1] * z[0] * 2])
 
 
 @ti.kernel
@@ -68,27 +68,28 @@ def main():
     """Main function"""
     print("Taichi FlagOS Backend Demo - Julia Set Fractal")
     print("=" * 50)
-    
+
     # Warmup
     print("Warming up...")
     paint(0.0)
     ti.sync()
-    
+
     # Benchmark
     import time
+
     print("Running benchmark...")
     start = time.time()
-    
+
     iterations = 100
     for i in range(iterations):
         paint(i * 0.03)
-    
+
     ti.sync()
     end = time.time()
-    
+
     print(f"Time for {iterations} iterations: {end - start:.3f}s")
     print(f"Average time per iteration: {(end - start) / iterations * 1000:.3f}ms")
-    
+
     # Visualization (only if GUI is available)
     try:
         gui = ti.GUI("Julia Set (FlagOS)", res=(n * 2, n))

@@ -85,7 +85,8 @@ Program::Program(Arch desired_arch) : snode_rw_accessors_bank_(this) {
 #ifdef TI_WITH_LLVM
     if (config.arch == Arch::flagos) {
 #ifdef TI_WITH_FLAGOS
-      program_impl_ = std::make_unique<FlagosProgramImpl>(config, profiler.get());
+      program_impl_ =
+          std::make_unique<FlagosProgramImpl>(config, profiler.get());
 #else
       TI_ERROR("This taichi is not compiled with FlagOS");
 #endif

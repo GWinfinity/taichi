@@ -10,9 +10,7 @@ import numpy as np
 import time
 
 # Initialize with FlagOS backend
-ti.init(arch=ti.flagos if hasattr(ti, 'flagos') else ti.cpu, 
-        flagos_chip="mlu370",
-        kernel_profiler=True)
+ti.init(arch=ti.flagos if hasattr(ti, "flagos") else ti.cpu, flagos_chip="mlu370", kernel_profiler=True)
 
 # Matrix dimensions
 N = 1024
@@ -34,9 +32,7 @@ def matmul_tiled():
 
 
 @ti.kernel
-def matmul_blocked(
-    BLOCK_SIZE: ti.template()
-):
+def matmul_blocked(BLOCK_SIZE: ti.template()):
     """Blocked matrix multiplication for better memory locality"""
     for i, j in ti.ndrange(N // BLOCK_SIZE, N // BLOCK_SIZE):
         for ii, jj in ti.ndrange(BLOCK_SIZE, BLOCK_SIZE):
@@ -53,34 +49,34 @@ def benchmark_matmul():
     # Initialize matrices with random values
     A_np = np.random.randn(N, N).astype(np.float32)
     B_np = np.random.randn(N, N).astype(np.float32)
-    
+
     A.from_numpy(A_np)
     B.from_numpy(B_np)
-    
+
     # Warmup
     print("Warming up...")
     matmul_tiled()
     ti.sync()
-    
+
     # Benchmark
     print(f"\nBenchmarking {N}x{N} matrix multiplication...")
-    
+
     # Simple tiled version
     start = time.time()
     matmul_tiled()
     ti.sync()
     elapsed = time.time() - start
-    
+
     print(f"\nSimple tiled version:")
     print(f"  Time: {elapsed:.3f}s")
     print(f"  GFLOPS: {2.0 * N**3 / elapsed / 1e9:.2f}")
-    
+
     # Verify correctness
     C_np = C.to_numpy()
     C_ref = A_np @ B_np
     error = np.max(np.abs(C_np - C_ref))
     print(f"  Max error: {error:.6f}")
-    
+
     # Print kernel profile
     print("\nKernel profiling:")
     ti.profiler.print_kernel_profiler_info()
@@ -92,7 +88,7 @@ def main():
     print(f"Matrix size: {N}x{N}")
     print(f"Target chip: {ti.cfg.flagos_chip if hasattr(ti.cfg, 'flagos_chip') else 'N/A'}")
     print()
-    
+
     benchmark_matmul()
 
 

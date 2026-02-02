@@ -15,15 +15,16 @@ namespace flagos {
 
 /**
  * @brief FlagOS Device abstraction for Taichi
- * 
+ *
  * FlagOS is a unified AI system software stack that provides a common interface
- * for various AI chips. This device implementation bridges Taichi's LLVM backend
- * with FlagOS's FlagTree compiler.
+ * for various AI chips. This device implementation bridges Taichi's LLVM
+ * backend with FlagOS's FlagTree compiler.
  */
 
 class FlagosPipeline : public Pipeline {
  public:
-  ~FlagosPipeline() override {}
+  ~FlagosPipeline() override {
+  }
 
   // Compiled kernel handle from FlagTree
   void *kernel_handle_{nullptr};
@@ -32,14 +33,16 @@ class FlagosPipeline : public Pipeline {
 
 class FlagosCommandList : public CommandList {
  public:
-  ~FlagosCommandList() override {}
-
-  void bind_pipeline(Pipeline *p) noexcept override { TI_NOT_IMPLEMENTED; }
-  RhiResult bind_shader_resources(ShaderResourceSet *res,
-                                  int set_index = 0) noexcept override {
-    TI_NOT_IMPLEMENTED
+  ~FlagosCommandList() override {
   }
-  RhiResult bind_raster_resources(RasterResources *res) noexcept override {
+
+  void bind_pipeline(Pipeline *p) noexcept override {
+    TI_NOT_IMPLEMENTED;
+  }
+  RhiResult bind_shader_resources(ShaderResourceSet *res,
+                                  int set_index = 0) noexcept override{
+      TI_NOT_IMPLEMENTED} RhiResult
+      bind_raster_resources(RasterResources *res) noexcept override {
     TI_NOT_IMPLEMENTED
   }
   void buffer_barrier(DevicePtr ptr, size_t size) noexcept override {
@@ -48,37 +51,40 @@ class FlagosCommandList : public CommandList {
   void buffer_barrier(DeviceAllocation alloc) noexcept override {
     TI_NOT_IMPLEMENTED
   }
-  void memory_barrier() noexcept override { TI_NOT_IMPLEMENTED; }
-  void buffer_copy(DevicePtr dst, DevicePtr src, size_t size) noexcept override {
+  void memory_barrier() noexcept override {
+    TI_NOT_IMPLEMENTED;
+  }
+  void buffer_copy(DevicePtr dst,
+                   DevicePtr src,
+                   size_t size) noexcept override {
     TI_NOT_IMPLEMENTED
   }
-  void buffer_fill(DevicePtr ptr, size_t size, uint32_t data) noexcept override {
-    TI_NOT_IMPLEMENTED
-  }
-  RhiResult dispatch(uint32_t x, uint32_t y = 1, uint32_t z = 1) noexcept override {
+  void buffer_fill(DevicePtr ptr, size_t size, uint32_t data) noexcept override{
+      TI_NOT_IMPLEMENTED} RhiResult
+      dispatch(uint32_t x, uint32_t y = 1, uint32_t z = 1) noexcept override {
     TI_NOT_IMPLEMENTED
   }
 };
 
 class FlagosStream : public Stream {
  public:
-  ~FlagosStream() override {}
+  ~FlagosStream() override {
+  }
 
-  RhiResult new_command_list(CommandList **out_cmdlist) noexcept override {
-    TI_NOT_IMPLEMENTED
-  }
-  StreamSemaphore submit(
-      CommandList *cmdlist,
-      const std::vector<StreamSemaphore> &wait_semaphores = {}) override {
-    TI_NOT_IMPLEMENTED
-  }
-  StreamSemaphore submit_synced(
-      CommandList *cmdlist,
-      const std::vector<StreamSemaphore> &wait_semaphores = {}) override {
+  RhiResult new_command_list(CommandList **out_cmdlist) noexcept override{
+      TI_NOT_IMPLEMENTED} StreamSemaphore
+      submit(CommandList *cmdlist,
+             const std::vector<StreamSemaphore> &wait_semaphores = {}) override{
+          TI_NOT_IMPLEMENTED} StreamSemaphore
+      submit_synced(
+          CommandList *cmdlist,
+          const std::vector<StreamSemaphore> &wait_semaphores = {}) override {
     TI_NOT_IMPLEMENTED
   }
 
-  void command_sync() override { TI_NOT_IMPLEMENTED; }
+  void command_sync() override {
+    TI_NOT_IMPLEMENTED;
+  }
 };
 
 class FlagosDevice : public LlvmDevice {
@@ -98,8 +104,10 @@ class FlagosDevice : public LlvmDevice {
   ~FlagosDevice() override;
 
   // Device capabilities
-  Arch arch() const override { return Arch::flagos; }
-  
+  Arch arch() const override {
+    return Arch::flagos;
+  }
+
   // Memory management
   RhiResult allocate_memory(const AllocParams &params,
                             DeviceAllocation *out_devalloc) override;
@@ -122,7 +130,9 @@ class FlagosDevice : public LlvmDevice {
       int num_alloc = 1,
       const std::vector<StreamSemaphore> &wait_sema = {}) noexcept override;
 
-  ShaderResourceSet *create_resource_set() final { TI_NOT_IMPLEMENTED; }
+  ShaderResourceSet *create_resource_set() final {
+    TI_NOT_IMPLEMENTED;
+  }
 
   RhiResult create_pipeline(Pipeline **out_pipeline,
                             const PipelineSourceDesc &src,
@@ -134,7 +144,9 @@ class FlagosDevice : public LlvmDevice {
   RhiResult map_range(DevicePtr ptr, uint64_t size, void **mapped_ptr) final;
   RhiResult map(DeviceAllocation alloc, void **mapped_ptr) final;
 
-  void unmap(DevicePtr ptr) override { TI_NOT_IMPLEMENTED; }
+  void unmap(DevicePtr ptr) override {
+    TI_NOT_IMPLEMENTED;
+  }
   void unmap(DeviceAllocation alloc) override;
 
   void memcpy_internal(DevicePtr dst, DevicePtr src, uint64_t size) override;
@@ -148,7 +160,9 @@ class FlagosDevice : public LlvmDevice {
 
   std::size_t get_total_memory() override;
 
-  Stream *get_compute_stream() override { TI_NOT_IMPLEMENTED; }
+  Stream *get_compute_stream() override {
+    TI_NOT_IMPLEMENTED;
+  }
 
   void wait_idle() override;
 
@@ -164,7 +178,9 @@ class FlagosDevice : public LlvmDevice {
   /**
    * @brief Get the target chip name
    */
-  std::string get_target_chip() const { return target_chip_; }
+  std::string get_target_chip() const {
+    return target_chip_;
+  }
 
   /**
    * @brief Check if a specific chip is supported
@@ -187,7 +203,7 @@ class FlagosDevice : public LlvmDevice {
  private:
   std::vector<AllocInfo> allocations_;
   std::string target_chip_{"generic"};
-  
+
   // FlagOS context
   struct FlagosContextWrapper;
   std::unique_ptr<FlagosContextWrapper> context_;

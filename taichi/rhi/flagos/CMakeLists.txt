@@ -18,7 +18,7 @@ target_include_directories(${FLAGOS_RHI}
 # FlagOS SDK integration
 if(TI_WITH_FLAGOS)
   target_compile_definitions(${FLAGOS_RHI} PRIVATE TI_WITH_FLAGOS)
-  
+
   # Find FlagOS SDK
   find_package(FlagOS QUIET)
   if(FlagOS_FOUND)

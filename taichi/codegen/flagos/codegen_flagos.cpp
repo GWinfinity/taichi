@@ -24,15 +24,13 @@ using namespace llvm;
 
 void TaskCodeGenFlagOS::create_print(std::string tag,
                                      DataType dt,
-                                     llvm::Value *value) {
-  // FlagOS print functionality
-  // TODO: Implement using FlagOS debug/logging API
-  TI_NOT_IMPLEMENTED
-}
+                                     llvm::Value *value){
+    // FlagOS print functionality
+    // TODO: Implement using FlagOS debug/logging API
+    TI_NOT_IMPLEMENTED}
 
-std::tuple<llvm::Value *, llvm::Type *> TaskCodeGenFlagOS::create_value_and_type(
-    llvm::Value *value,
-    DataType dt) {
+std::tuple<llvm::Value *, llvm::Type *> TaskCodeGenFlagOS::
+    create_value_and_type(llvm::Value *value, DataType dt) {
   TI_NOT_IMPLEMENTED
 }
 
@@ -50,7 +48,7 @@ void TaskCodeGenFlagOS::emit_extra_unary(UnaryOpStmt *stmt) {
   // FlagOS uses standard LLVM math intrinsics or device math library
   // For now, delegate to base class implementation
   TaskCodeGenLLVM::emit_extra_unary(stmt);
-  
+
   // TODO: Add FlagOS-specific optimizations
   // e.g., use fast math intrinsics for AI chips
 }
@@ -60,8 +58,7 @@ llvm::Value *TaskCodeGenFlagOS::optimized_reduction(AtomicOpStmt *stmt) {
     return nullptr;
   }
   TI_ASSERT(stmt->val->ret_type->is<PrimitiveType>());
-  PrimitiveTypeID prim_type =
-      stmt->val->ret_type->cast<PrimitiveType>()->type;
+  PrimitiveTypeID prim_type = stmt->val->ret_type->cast<PrimitiveType>()->type;
 
   // FlagOS reduction operations
   // These can be optimized using chip-specific instructions
@@ -69,12 +66,18 @@ llvm::Value *TaskCodeGenFlagOS::optimized_reduction(AtomicOpStmt *stmt) {
                      std::unordered_map<AtomicOpType, std::string>>
       fast_reductions;
 
-  fast_reductions[PrimitiveTypeID::i32][AtomicOpType::add] = "flagos_reduce_add_i32";
-  fast_reductions[PrimitiveTypeID::f32][AtomicOpType::add] = "flagos_reduce_add_f32";
-  fast_reductions[PrimitiveTypeID::i32][AtomicOpType::min] = "flagos_reduce_min_i32";
-  fast_reductions[PrimitiveTypeID::f32][AtomicOpType::min] = "flagos_reduce_min_f32";
-  fast_reductions[PrimitiveTypeID::i32][AtomicOpType::max] = "flagos_reduce_max_i32";
-  fast_reductions[PrimitiveTypeID::f32][AtomicOpType::max] = "flagos_reduce_max_f32";
+  fast_reductions[PrimitiveTypeID::i32][AtomicOpType::add] =
+      "flagos_reduce_add_i32";
+  fast_reductions[PrimitiveTypeID::f32][AtomicOpType::add] =
+      "flagos_reduce_add_f32";
+  fast_reductions[PrimitiveTypeID::i32][AtomicOpType::min] =
+      "flagos_reduce_min_i32";
+  fast_reductions[PrimitiveTypeID::f32][AtomicOpType::min] =
+      "flagos_reduce_min_f32";
+  fast_reductions[PrimitiveTypeID::i32][AtomicOpType::max] =
+      "flagos_reduce_max_i32";
+  fast_reductions[PrimitiveTypeID::f32][AtomicOpType::max] =
+      "flagos_reduce_max_f32";
 
   fast_reductions[PrimitiveTypeID::i32][AtomicOpType::bit_and] =
       "flagos_reduce_and_i32";
@@ -188,7 +191,7 @@ void TaskCodeGenFlagOS::visit(OffloadedStmt *stmt) {
       TI_NOT_IMPLEMENTED
     }
     finalize_offloaded_task_function();
-    
+
     // Configure grid and block dimensions for FlagOS
     current_task->grid_dim = stmt->grid_dim;
     if (stmt->task_type == Type::range_for) {
@@ -230,10 +233,10 @@ void TaskCodeGenFlagOS::visit(ExternalFuncCallStmt *stmt) {
 void TaskCodeGenFlagOS::visit(BinaryOpStmt *stmt) {
   auto op = stmt->op_type;
   auto ret_taichi_type = stmt->ret_type;
-  
+
   // Delegate to base class for standard operations
   TaskCodeGenLLVM::visit(stmt);
-  
+
   // TODO: Add FlagOS-specific optimizations for math operations
   // e.g., use fast approximations for transcendental functions
 }
@@ -241,14 +244,14 @@ void TaskCodeGenFlagOS::visit(BinaryOpStmt *stmt) {
 std::tuple<llvm::Value *, llvm::Value *> TaskCodeGenFlagOS::get_spmd_info() {
   // Get SPMD (Single Program Multiple Data) execution information
   // This is similar to CUDA/AMDGPU but uses FlagOS abstractions
-  
+
   // TODO: Use FlagOS intrinsics when available
   // For now, use LLVM GPU intrinsics
-  auto thread_idx = builder->CreateIntrinsic(
-      Intrinsic::nvvm_read_ptx_sreg_tid_x, {}, {});
-  auto block_dim = builder->CreateIntrinsic(
-      Intrinsic::nvvm_read_ptx_sreg_ntid_x, {}, {});
-      
+  auto thread_idx =
+      builder->CreateIntrinsic(Intrinsic::nvvm_read_ptx_sreg_tid_x, {}, {});
+  auto block_dim =
+      builder->CreateIntrinsic(Intrinsic::nvvm_read_ptx_sreg_ntid_x, {}, {});
+
   return std::make_tuple(thread_idx, block_dim);
 }
 

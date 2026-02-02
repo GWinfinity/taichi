@@ -24,9 +24,9 @@ FlagosProgramImpl::FlagosProgramImpl(CompileConfig &config,
       config.flagos_chip = "generic";  // Default chip
     }
   }
-  
+
   TI_INFO("FlagosProgramImpl created with chip: {}", config.flagos_chip);
-  
+
   // Validate chip name
   if (!flagos::FlagosDevice::is_chip_supported(config.flagos_chip)) {
     TI_WARN("FlagOS chip '{}' may not be fully supported", config.flagos_chip);
@@ -66,16 +66,16 @@ void FlagosProgramImpl::materialize_snode_tree(SNodeTree *tree,
     initialize_flagos_backend();
     flagos_initialized = true;
   }
-  
+
   // Delegate to base class implementation
   LlvmProgramImpl::materialize_snode_tree(tree, result_buffer);
 }
 
 void FlagosProgramImpl::materialize_runtime(KernelProfilerBase *profiler,
-                                           uint64 **result_buffer_ptr) {
+                                            uint64 **result_buffer_ptr) {
   // First initialize base LLVM runtime
   LlvmProgramImpl::materialize_runtime(profiler, result_buffer_ptr);
-  
+
   // Then initialize FlagOS-specific context
   initialize_flagos_backend();
 }

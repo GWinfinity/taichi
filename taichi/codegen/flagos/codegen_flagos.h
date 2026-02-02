@@ -7,7 +7,7 @@ namespace lang {
 
 /**
  * @brief LLVM Code Generation for FlagOS Backend
- * 
+ *
  * This class extends TaskCodeGenLLVM to provide code generation
  * for the FlagOS unified AI chip backend. It generates LLVM IR
  * that can be compiled by FlagTree to target various AI chips.
@@ -22,7 +22,8 @@ class TaskCodeGenFlagOS : public TaskCodeGenLLVM {
                     TaichiLLVMContext &tlctx,
                     const Kernel *kernel,
                     IRNode *ir = nullptr)
-      : TaskCodeGenLLVM(id, config, tlctx, kernel, ir) {}
+      : TaskCodeGenLLVM(id, config, tlctx, kernel, ir) {
+  }
 
   // Custom visitors for FlagOS-specific code generation
   void visit(OffloadedStmt *stmt) override;
@@ -46,7 +47,9 @@ class TaskCodeGenFlagOS : public TaskCodeGenLLVM {
   llvm::Value *optimized_reduction(AtomicOpStmt *stmt) override;
 
   // Kernel argument passing
-  bool kernel_argument_by_val() const override { return false; }
+  bool kernel_argument_by_val() const override {
+    return false;
+  }
 
   // Math function emission using FlagOS math library
   void emit_extra_unary(UnaryOpStmt *stmt) override;
@@ -55,7 +58,8 @@ class TaskCodeGenFlagOS : public TaskCodeGenLLVM {
   // Print support
   void create_print(std::string tag, DataType dt, llvm::Value *value) override;
   std::tuple<llvm::Value *, llvm::Type *> create_value_and_type(
-      llvm::Value *value, DataType dt);
+      llvm::Value *value,
+      DataType dt);
 };
 
 /**
@@ -67,7 +71,8 @@ class KernelCodeGenFlagOS : public KernelCodeGen {
                       const Kernel *kernel,
                       IRNode *ir = nullptr,
                       TaichiLLVMContext &tlctx)
-      : KernelCodeGen(compile_config, kernel, ir, tlctx) {}
+      : KernelCodeGen(compile_config, kernel, ir, tlctx) {
+  }
 
   LLVMCompiledTask compile_task(
       int task_codegen_id,

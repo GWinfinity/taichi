@@ -9,7 +9,7 @@ namespace flagos {
 
 /**
  * @brief FlagOS Kernel Compiler
- * 
+ *
  * Compiles Taichi kernels to LLVM IR for FlagOS backend.
  * Uses FlagTree to compile LLVM IR to target chip code.
  */
@@ -41,7 +41,7 @@ class KernelCompiler : public LLVM::KernelCompiler {
 
  private:
   Config config_;
-  
+
   /**
    * @brief Compile kernel using FlagTree
    */

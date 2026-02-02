@@ -115,7 +115,7 @@ if (TI_WITH_FLAGOS)
     add_subdirectory(taichi/rhi/flagos)
     add_subdirectory(taichi/codegen/flagos)
     add_subdirectory(taichi/runtime/program_impls/flagos)
-    
+
     target_link_libraries(${CORE_LIBRARY_NAME} PRIVATE flagos_rhi)
     target_link_libraries(${CORE_LIBRARY_NAME} PRIVATE flagos_codegen)
     target_link_libraries(${CORE_LIBRARY_NAME} PRIVATE flagos_program)
@@ -241,7 +241,7 @@ class FlagTreeCompiler {
   // 编译 LLVM IR 到目标芯片代码
   std::vector<uint8_t> compile(const std::string &llvm_ir,
                                const std::string &target_chip);
-  
+
   // 获取支持的芯片列表
   std::vector<std::string> get_supported_chips();
 };

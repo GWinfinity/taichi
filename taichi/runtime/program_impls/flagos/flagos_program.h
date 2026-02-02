@@ -16,10 +16,10 @@ class KernelLauncher;
 
 /**
  * @brief FlagOS Program Implementation
- * 
+ *
  * This class extends LlvmProgramImpl to provide program execution
  * support for the FlagOS unified AI chip backend.
- * 
+ *
  * Features:
  * - Multi-chip support (MLU, Ascend, DCU, GCU, etc.)
  * - Integration with FlagTree compiler
@@ -42,7 +42,7 @@ class FlagosProgramImpl : public LlvmProgramImpl {
   /* -------------------------------- */
 
   void materialize_runtime(KernelProfilerBase *profiler,
-                          uint64 **result_buffer_ptr) override;
+                           uint64 **result_buffer_ptr) override;
 
   void finalize() override {
     LlvmProgramImpl::finalize();
@@ -63,12 +63,16 @@ class FlagosProgramImpl : public LlvmProgramImpl {
   /**
    * @brief Get the target chip for this program
    */
-  std::string get_target_chip() const { return config_.flagos_chip; }
+  std::string get_target_chip() const {
+    return config_.flagos_chip;
+  }
 
   /**
    * @brief Set the target chip for this program
    */
-  void set_target_chip(const std::string &chip) { config_.flagos_chip = chip; }
+  void set_target_chip(const std::string &chip) {
+    config_.flagos_chip = chip;
+  }
 
   /**
    * @brief Check if FlagOS backend is properly initialized
